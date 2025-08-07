@@ -4,48 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Notice Board - GJUS&T</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for toast and animations */
+        /* Subtle gradient for cards */
+        .card-gradient {
+            background: linear-gradient(145deg, rgba(31, 41, 55, 0.95), rgba(55, 65, 81, 0.95));
+        }
+
+        /* Toast styling and animation */
         #toast {
-            transition: opacity 0.3s, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            transform: translateY(100px);
+            position: fixed;
+            bottom: 1rem; /* Adjusted for consistent spacing */
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 200px;
+            max-width: 90%;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0.3s;
         }
         #toast.show {
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
             opacity: 1;
+            visibility: visible;
+        }
+
+        /* Button hover effect */
+        .btn-gradient {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Fade-in animation for cards */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white font-inter min-h-screen flex flex-col items-center justify-between p-4">
+<body class="bg-gray-900 text-white font-inter min-h-screen flex flex-col items-center justify-between p-4 md:p-6">
     <header class="text-center mt-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-indigo-400">Smart Notice Board</h1>
+        <!-- Decorative SVG Icon -->
+        <div class="flex justify-center mb-4">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 4C13.52 4 5 12.52 5 23C5 33.48 13.52 42 24 42C34.48 42 43 33.48 43 23C43 12.52 34.48 4 24 4ZM24 38C15.72 38 9 31.28 9 23C9 14.72 15.72 8 24 8C32.28 8 39 14.72 39 23C39 31.28 32.28 38 24 38Z" fill="#4f46e5"/>
+                <path d="M24 14C19.58 14 16 17.58 16 22C16 26.42 19.58 30 24 30C28.42 30 32 26.42 32 22C32 17.58 28.42 14 24 14ZM24 28C20.69 28 18 25.31 18 22C18 18.69 20.69 16 24 16C27.31 16 30 18.69 30 22C30 25.31 27.31 28 24 28Z" fill="#a5b4fc"/>
+            </svg>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold text-indigo-300">Smart Notice Board</h1>
         <p class="text-gray-400 mt-2 text-lg">Guru Jambheshwar University of Science & Technology</p>
     </header>
 
     <main class="w-full max-w-md mx-auto">
         <!-- Login Form -->
-        <div id="login-form" class="bg-gray-800 rounded-xl p-8 shadow-lg shadow-indigo-500/20">
-            <h2 class="text-2xl font-semibold text-center mb-6">Admin Login</h2>
+        <div id="login-form" class="card-gradient rounded-xl p-8 shadow-lg shadow-indigo-500/10 animate-fade-in">
+            <h2 class="text-2xl font-semibold text-center mb-6 text-gray-100">Admin Login</h2>
             <div class="space-y-4">
-                <input type="email" id="email" placeholder="Email" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <input type="password" id="password" placeholder="Password" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button id="login-btn" class="w-full p-3 bg-indigo-600 rounded-lg text-white font-medium hover:bg-indigo-700 transition duration-200">Login</button>
+                <input type="email" id="email" placeholder="Email" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200">
+                <input type="password" id="password" placeholder="Password" class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition duration-200">
+                <button id="login-btn" class="w-full p-3 btn-gradient rounded-lg text-white font-medium">Login</button>
             </div>
         </div>
 
         <!-- Dashboard -->
-        <div id="dashboard" class="bg-gray-800 rounded-xl p-8 shadow-lg shadow-indigo-500/20 hidden">
-            <h2 class="text-2xl font-semibold text-center mb-6">Update Notice</h2>
+        <div id="dashboard" class="card-gradient rounded-xl p-8 shadow-lg shadow-indigo-500/10 animate-fade-in hidden">
+            <h2 class="text-2xl font-semibold text-center mb-6 text-gray-100">Update Notice</h2>
             <div class="space-y-4">
-                <div id="current-notice" class="bg-gray-700 p-4 rounded-lg">
-                    <h3 class="text-lg font-medium">Current Notice:</h3>
-                    <p id="current-notice-text" class="text-gray-300">Loading...</p>
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                    <h3 class="text-lg font-medium text-gray-200">Current Notice:</h3>
+                    <p id="current-notice-text" class="text-gray-300 mt-2">Loading...</p>
                 </div>
-                <textarea id="notice" placeholder="Enter the new notice text here..." class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-y min-h-[120px]"></textarea>
-                <button id="update-btn" class="w-full p-3 bg-indigo-600 rounded-lg text-white font-medium hover:bg-indigo-700 transition duration-200">Update Notice</button>
-                <button id="logout" class="w-full p-3 bg-gray-600 rounded-lg text-white font-medium hover:bg-gray-500 transition duration-200">Logout</button>
+                <textarea id="notice" placeholder="Enter the new notice text here..." class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-y min-h-[120px] transition duration-200"></textarea>
+                <button id="update-btn" class="w-full p-3 btn-gradient rounded-lg text-white font-medium">Update Notice</button>
+                <button id="logout" class="w-full p-3 bg-gray-700 rounded-lg text-white font-medium hover:bg-gray-600 transition duration-200">Logout</button>
             </div>
         </div>
     </main>
@@ -55,7 +96,7 @@
         <p>Made by Vinit, Mahender, and Sahil</p>
     </footer>
 
-    <div id="toast" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 invisible"></div>
+    <div id="toast" class="bg-indigo-500 text-white px-6 py-3 rounded-lg shadow-lg"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -95,9 +136,9 @@
         const showToast = (message, isError = false) => {
             clearTimeout(toastTimeout);
             toastElement.textContent = message;
-            toastElement.className = `fixed bottom-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg ${isError ? 'bg-red-600' : 'bg-indigo-600'} text-white show`;
+            toastElement.className = `fixed bottom-4 left-50% transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg text-white ${isError ? 'bg-red-500' : 'bg-indigo-500'} show`;
             toastTimeout = setTimeout(() => {
-                toastElement.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 invisible';
+                toastElement.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-indigo-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 invisible';
             }, 3000);
         };
 
